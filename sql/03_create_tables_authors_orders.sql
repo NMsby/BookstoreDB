@@ -32,3 +32,52 @@ CREATE TABLE order_status (
 
 -- Output confirmation message
 SELECT 'order_status table created successfully' AS 'Status';
+
+
+-- Create cust_order table
+CREATE TABLE cust_order (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    shipping_address_id INT,
+    billing_address_id INT,
+    shipping_method_id INT,
+    order_status_id INT NOT NULL,
+    total_amount DECIMAL(10,2),
+    payment_method VARCHAR(50),
+    payment_transaction_id VARCHAR(100),
+    special_instructions TEXT,
+    
+    -- Foreign key constraints for tables already created
+    CONSTRAINT fk_order_status FOREIGN KEY (order_status_id) 
+        REFERENCES order_status(order_status_id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT,
+    
+    -- Note: These foreign keys reference tables that will be created by Ivy
+    -- They will need to be added after those tables are created
+    /*
+    CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) 
+        REFERENCES customer(customer_id),
+    CONSTRAINT fk_order_shipping_address FOREIGN KEY (shipping_address_id) 
+        REFERENCES address(address_id),
+    CONSTRAINT fk_order_billing_address FOREIGN KEY (billing_address_id) 
+        REFERENCES address(address_id),
+    CONSTRAINT fk_order_shipping_method FOREIGN KEY (shipping_method_id) 
+        REFERENCES shipping_method(shipping_method_id)
+    */
+    
+    -- Adding a check constraint for total_amount
+    CONSTRAINT check_total_amount CHECK (total_amount IS NULL OR total_amount >= 0)
+) COMMENT 'Stores customer orders';
+
+-- Add indexes for common query patterns
+CREATE INDEX idx_order_customer ON cust_order(customer_id);
+CREATE INDEX idx_order_date ON cust_order(order_date);
+CREATE INDEX idx_order_status ON cust_order(order_status_id);
+CREATE INDEX idx_order_shipping_address ON cust_order(shipping_address_id);
+CREATE INDEX idx_order_billing_address ON cust_order(billing_address_id);
+CREATE INDEX idx_order_shipping_method ON cust_order(shipping_method_id);
+
+-- Output confirmation message
+SELECT 'cust_order table created successfully' AS 'Status';
