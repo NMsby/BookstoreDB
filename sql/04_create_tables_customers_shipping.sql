@@ -52,3 +52,24 @@ CREATE TABLE address_status (
 
 -- Output confirmation message
 SELECT 'address_status table created successfully' AS 'Status';
+
+
+-- Create customer table
+CREATE TABLE customer (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    date_registered DATE DEFAULT CURRENT_DATE,
+    password_hash VARCHAR(255) COMMENT 'For login credentials',
+    birth_date DATE
+) COMMENT 'Stores information about bookstore customers';
+
+-- Add indexes for common search patterns
+CREATE INDEX idx_customer_name ON customer(last_name, first_name);
+CREATE INDEX idx_customer_email ON customer(email);
+CREATE INDEX idx_customer_date_registered ON customer(date_registered);
+
+-- Output confirmation message
+SELECT 'customer table created successfully' AS 'Status';
