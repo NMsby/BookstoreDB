@@ -115,3 +115,33 @@ CREATE INDEX idx_orderline_book ON order_line(book_id);
 
 -- Output confirmation message
 SELECT 'order_line table created successfully' AS 'Status';
+
+
+-- Create order_history table
+CREATE TABLE order_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    order_status_id INT NOT NULL,
+    status_change_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    notes TEXT,
+    updated_by VARCHAR(50) COMMENT 'User who made the update',
+    
+    -- Foreign key constraints
+    CONSTRAINT fk_history_order FOREIGN KEY (order_id) 
+        REFERENCES cust_order(order_id) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_history_status FOREIGN KEY (order_status_id) 
+        REFERENCES order_status(order_status_id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT
+) COMMENT 'Tracks the history of status changes for orders';
+
+-- Add indexes for common query patterns
+CREATE INDEX idx_history_order ON order_history(order_id);
+CREATE INDEX idx_history_status ON order_history(order_status_id);
+CREATE INDEX idx_history_date ON order_history(status_change_date);
+
+-- Output confirmation message
+SELECT 'order_history table created successfully' AS 'Status';
