@@ -17,7 +17,13 @@ SOURCE sql/03_create_tables_authors_orders.sql;
 SOURCE sql/04_create_tables_customers_shipping.sql;
 
 -- Step 5: Set up user roles and permissions
-SOURCE sql/03_create_users.sql;
+SOURCE sql/05_create_users.sql;
+
+-- Step 6: Load sample data
+SOURCE sql/06_sample_data.sql;
+
+-- Step 7: Verify database integrity
+SOURCE sql/09_database_validation.sql;
 
 -- Output completion message
 SELECT 'Complete database setup finished successfully' AS 'Status';
