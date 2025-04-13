@@ -73,3 +73,39 @@ CREATE INDEX idx_customer_date_registered ON customer(date_registered);
 
 -- Output confirmation message
 SELECT 'customer table created successfully' AS 'Status';
+
+
+-- Create customer_address junction table
+CREATE TABLE customer_address (
+    customer_id INT NOT NULL,
+    address_id INT NOT NULL,
+    address_status_id INT NOT NULL,
+    is_default BOOLEAN DEFAULT FALSE,
+    
+    -- Define composite primary key
+    PRIMARY KEY (customer_id, address_id),
+    
+    -- Foreign key constraints
+    CONSTRAINT fk_custaddress_customer FOREIGN KEY (customer_id) 
+        REFERENCES customer(customer_id) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_custaddress_address FOREIGN KEY (address_id) 
+        REFERENCES address(address_id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT,
+    
+    CONSTRAINT fk_custaddress_status FOREIGN KEY (address_status_id) 
+        REFERENCES address_status(address_status_id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT
+) COMMENT 'Junction table connecting customers and addresses with status';
+
+-- Add indexes for faster lookups
+CREATE INDEX idx_custaddress_address ON customer_address(address_id);
+CREATE INDEX idx_custaddress_status ON customer_address(address_status_id);
+CREATE INDEX idx_custaddress_default ON customer_address(is_default);
+
+-- Output confirmation message
+SELECT 'customer_address junction table created successfully' AS 'Status';
