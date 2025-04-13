@@ -42,3 +42,13 @@ CREATE INDEX idx_address_postal_code ON address(postal_code);
 
 -- Output confirmation message
 SELECT 'address table created successfully' AS 'Status';
+
+
+-- Create address_status table
+CREATE TABLE address_status (
+    address_status_id INT AUTO_INCREMENT PRIMARY KEY,
+    status_name VARCHAR(20) NOT NULL UNIQUE COMMENT 'E.g., current, old, billing, shipping'
+) COMMENT 'Stores possible statuses for customer addresses';
+
+-- Output confirmation message
+SELECT 'address_status table created successfully' AS 'Status';
