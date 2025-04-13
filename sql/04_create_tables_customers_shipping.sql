@@ -109,3 +109,41 @@ CREATE INDEX idx_custaddress_default ON customer_address(is_default);
 
 -- Output confirmation message
 SELECT 'customer_address junction table created successfully' AS 'Status';
+
+
+-- Create shipping_method table
+CREATE TABLE shipping_method (
+    shipping_method_id INT AUTO_INCREMENT PRIMARY KEY,
+    method_name VARCHAR(50) NOT NULL UNIQUE,
+    cost DECIMAL(10,2) NOT NULL,
+    estimated_delivery_days INT,
+    is_active BOOLEAN DEFAULT TRUE
+) COMMENT 'Stores available shipping methods for orders';
+
+-- Add index for active shipping methods
+CREATE INDEX idx_shipping_active ON shipping_method(is_active);
+
+-- Output confirmation message
+SELECT 'shipping_method table created successfully' AS 'Status';
+
+-- Now that all tables are created, we can add the foreign key constraints to cust_order table that reference tables created here
+ALTER TABLE cust_order 
+ADD CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) 
+    REFERENCES customer(customer_id)
+    ON UPDATE CASCADE 
+    ON DELETE RESTRICT,
+ADD CONSTRAINT fk_order_shipping_address FOREIGN KEY (shipping_address_id) 
+    REFERENCES address(address_id)
+    ON UPDATE CASCADE 
+    ON DELETE RESTRICT,
+ADD CONSTRAINT fk_order_billing_address FOREIGN KEY (billing_address_id) 
+    REFERENCES address(address_id)
+    ON UPDATE CASCADE 
+    ON DELETE RESTRICT,
+ADD CONSTRAINT fk_order_shipping_method FOREIGN KEY (shipping_method_id) 
+    REFERENCES shipping_method(shipping_method_id)
+    ON UPDATE CASCADE 
+    ON DELETE RESTRICT;
+
+-- Output confirmation message
+SELECT 'Foreign key constraints added to cust_order table' AS 'Status';
