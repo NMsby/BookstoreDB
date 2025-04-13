@@ -81,3 +81,37 @@ CREATE INDEX idx_order_shipping_method ON cust_order(shipping_method_id);
 
 -- Output confirmation message
 SELECT 'cust_order table created successfully' AS 'Status';
+
+
+-- Create order_line table
+CREATE TABLE order_line (
+    order_line_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    book_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price_at_time_of_order DECIMAL(10,2) NOT NULL,
+    discount_amount DECIMAL(10,2) DEFAULT 0,
+    
+    -- Foreign key constraints
+    CONSTRAINT fk_orderline_order FOREIGN KEY (order_id) 
+        REFERENCES cust_order(order_id) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_orderline_book FOREIGN KEY (book_id) 
+        REFERENCES book(book_id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT,
+    
+    -- Add check constraints
+    CONSTRAINT check_quantity CHECK (quantity > 0),
+    CONSTRAINT check_price CHECK (price_at_time_of_order >= 0),
+    CONSTRAINT check_discount CHECK (discount_amount >= 0)
+) COMMENT 'Stores individual line items within customer orders';
+
+-- Add indexes for common query patterns
+CREATE INDEX idx_orderline_order ON order_line(order_id);
+CREATE INDEX idx_orderline_book ON order_line(book_id);
+
+-- Output confirmation message
+SELECT 'order_line table created successfully' AS 'Status';
